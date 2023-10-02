@@ -1,9 +1,10 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+console.log(process.env.AIRTABLE_API_KEY);
+
 const Airtable = require("airtable-node");
 const airtable = new Airtable({
-  endpointUrl: "https://api.airtable.com/v0/appNiSW6Wp0N1Zjoi/viceItems",
   apiKey: process.env.AIRTABLE_API_KEY,
 })
   .base(process.env.AIRTABLE_BASE)
@@ -15,7 +16,7 @@ exports.handler = async (event, context, cb) => {
     console.log(response);
     return {
       statusCode: 200,
-      body: "items route",
+      body: JSON.stringify(response),
     };
   } catch (error) {
     console.log(error);
