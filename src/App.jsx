@@ -5,6 +5,9 @@ import Hero from "./pages/Hero";
 import Savings from "./pages/Savings";
 import HomeLayout from "./pages/HomeLayout";
 import Stats from "./pages/Stats";
+import Item from "./pages/Item";
+import { loader as itemsLoader } from "./pages/Savings";
+import { loader as itemLoader } from "./pages/Item";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +24,13 @@ const router = createBrowserRouter([
         path: "savings",
         element: <Savings />,
         errorElement: <ErrorElement />,
+        loader: itemsLoader,
+      },
+      {
+        path: "savings/:id",
+        element: <Item />,
+        errorElement: <ErrorElement />,
+        loader: itemLoader,
       },
       {
         path: "stats",

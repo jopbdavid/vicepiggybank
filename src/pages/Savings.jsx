@@ -4,25 +4,18 @@ import ItemsForm from "../components/ItemsForm";
 import { customFetch } from "../utils/customFetch";
 import { useLoaderData } from "react-router-dom";
 
-const url = "/savings";
-
 export const loader = async ({ request }) => {
-  const params = Object.fromEntries([
-    ...new URL(request.url).searchParams.entries(),
-  ]);
+  const response = await customFetch();
+  console.log(response.data.records);
 
-  const response = await customFetch(url, { params });
-  console.log(response);
+  const items = response.data.records;
 
-  const items = response.data.data;
-  const metaData = response.data.meta;
-
-  return null;
+  return items;
 };
 
 const Savings = () => {
   return (
-    <div className="bg-emerald-200 py-24 h-screen flex  items-center flex-col ">
+    <div className="bg-emerald-200 py-24 h-screen flex  items-center flex-col w-[100%]">
       <ItemsForm />
       <ItemsContainer />
     </div>

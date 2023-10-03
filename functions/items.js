@@ -12,9 +12,8 @@ exports.handler = async (event, context, cb) => {
   try {
     const response = await airtable.list({ maxRecords: 200 });
 
-    const items = response.records.map((item) => {
-      console.log(item);
-      const { id, fields } = item;
+    const items = response.records.map((i) => {
+      const { id, fields } = i;
       const {
         notes,
         brand,
@@ -29,7 +28,6 @@ exports.handler = async (event, context, cb) => {
       } = fields;
 
       const imgUrl = photo[0].url;
-      console.log(items);
 
       return {
         notes,
