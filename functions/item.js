@@ -7,6 +7,7 @@ const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
 
 exports.handler = async (event, context, cb) => {
   const { id } = event.queryStringParameters;
+
   if (id) {
     try {
       let item = await airtable.retrieve(id);
@@ -18,7 +19,7 @@ exports.handler = async (event, context, cb) => {
         };
       }
       item = { id: item.id, ...item.fields };
-      console.log(item);
+
       return {
         statusCode: 200,
         body: JSON.stringify(item),

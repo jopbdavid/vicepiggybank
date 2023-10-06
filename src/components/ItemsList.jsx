@@ -6,7 +6,7 @@ import { GrMoney } from "react-icons/gr";
 
 const ItemsList = () => {
   const items = useLoaderData();
-  console.log(items);
+
   return (
     <div className="mt-12 grid gap-y-8 w-2/3">
       {items.map((i) => {

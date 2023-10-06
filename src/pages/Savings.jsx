@@ -6,7 +6,6 @@ import { useLoaderData } from "react-router-dom";
 
 export const loader = async ({ request }) => {
   const response = await customFetch();
-  console.log(response.data.records);
 
   const items = response.data.records;
 

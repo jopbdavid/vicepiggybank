@@ -8,6 +8,7 @@ import Stats from "./pages/Stats";
 import Item from "./pages/Item";
 import { loader as itemsLoader } from "./pages/Savings";
 import { loader as itemLoader } from "./pages/Item";
+import { action as addItemAction } from "./components/ItemTracker";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
         element: <Item />,
         errorElement: <ErrorElement />,
         loader: itemLoader,
+        action: addItemAction,
       },
       {
         path: "stats",
