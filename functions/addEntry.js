@@ -1,44 +1,35 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const Airtable = require("airtable-node");
-const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
-  .base(process.env.AIRTABLE_BASE)
-  .table(process.env.AIRTABLE_ENTRIES);
+var Airtable = require("airtable");
+var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  process.env.AIRTABLE_BASE
+);
 
 exports.handler = async (event, context, cb) => {
-  const data = JSON.parse(event.body);
-
-  console.log(data.newEntry);
-  const newEntry = {
-    fields: {
-      item: data.newEntry.item,
-      units: data.newEntry.units,
-      date: data.newEntry.date,
-    },
-  };
-  console.log(newEntry);
-
   try {
-    let item = await airtable.create(newEntry);
+    const data = JSON.parse(event.body);
+    console.log(data);
 
-    if (item.error) {
-      console.log(item.error);
-      return {
-        statusCode: 400,
-        body: JSON.stringify(item.error),
-      };
-    }
-    item = { id: item.id, ...item.fields };
+    const records = await base(process.env.AIRTABLE_ENTRIES).create([
+      {
+        fields: {
+          item: data.fields.item,
+          units: data.fields.units,
+          date: data.fields.date,
+        },
+      },
+    ]);
+    records.forEach(function (record) {
+      console.log(record.getId());
+    });
 
     return {
       statusCode: 200,
-      body: JSON.stringify(item),
+      body: JSON.stringify(records),
     };
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error(err);
     return {
       statusCode: 500,
-      body: "Server error",
+      body: JSON.stringify(err.message),
     };
   }
 };
