@@ -5,14 +5,16 @@ var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 
 exports.handler = async (event, context, cb) => {
   try {
-    const data = JSON.parse(event.body);
-    console.log(data.fields.id);
+    const id = event.queryStringParameters.id;
+    console.log(id);
 
-    const deletedRecord = await base(process.env.AIRTABLE_ENTRIES).destroy(id);
-    console.log("Deleted record", deletedRecord.id);
+    const deletedRecord = await base(process.env.AIRTABLE_ENTRIES).destroy([
+      id,
+    ]);
+    console.log("Deleted record", deletedRecord[0].id);
     return {
       statusCode: 200,
-      body: JSON.stringify(records),
+      body: JSON.stringify(deletedRecord[0].id),
     };
   } catch (err) {
     console.error(err);

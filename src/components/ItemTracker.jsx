@@ -44,13 +44,14 @@ const getEntries = async () => {
   }
 };
 
-const deleteEntry = async () => {
+const deleteEntry = async (id) => {
   try {
-    const response = await axios.delete(`/.netlify/functions/removeEntry`);
+    console.log(id);
+    const response = await axios.delete(
+      `/.netlify/functions/removeEntry?id=${id}`
+    );
 
-    console.log(response);
-
-    // return response;
+    return response;
   } catch (error) {
     return { error: "Error making request" };
   }
@@ -76,6 +77,16 @@ const ItemTracker = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteEntry(id);
+      console.log(response);
+      await fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
@@ -206,7 +217,7 @@ const ItemTracker = () => {
                       <span>{fields.name}</span>{" "}
                       <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => deleteEntry(id)}
+                        onClick={() => handleDelete(id)}
                       >
                         Delete
                       </button>
