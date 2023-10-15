@@ -47,7 +47,10 @@ function App() {
   return (
     <>
       <RouterProvider router={router}>
-        <h1 className="text-7xl font-bold underline">Tailwind project</h1>;
+        <h1 className="text-7xl font-bold underline">
+          VicePiggyBank project by Jaybee
+        </h1>
+        ;
       </RouterProvider>
     </>
   );

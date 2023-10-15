@@ -7,8 +7,7 @@ const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
 
 exports.handler = async (event, context, cb) => {
   try {
-    const response = await airtable.list({ maxRecords: 200 });
-    console.log(response);
+    const response = await airtable.list({ maxRecords: 1000 });
 
     const entries = response.records.map((i) => {
       const { id, fields } = i;
