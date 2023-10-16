@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { formatPrice } from "../utils/extras";
 import cost from "../assets/cost.svg";
 import estimate from "../assets/estimate.svg";
 import calendar from "../assets/calendar.svg";
 import ItemTracker from "../components/ItemTracker";
-
 import axios from "axios";
+import EntryList from "../components/EntryList";
 
 export const loader = async ({ params }) => {
   const id = params.id;
@@ -18,7 +18,32 @@ export const loader = async ({ params }) => {
   return item;
 };
 
+export const getEntries = async () => {
+  try {
+    const response = await axios.get(`/.netlify/functions/entries`);
+
+    const data = response.data.records;
+
+    return data;
+  } catch (error) {
+    return { error: "Error making request" };
+  }
+};
+
 const Item = () => {
+  const [entries, setEntries] = useState([]);
+  const fetchData = async () => {
+    try {
+      const list = await getEntries();
+      const formattedList = list.filter(
+        (entry) => entry.fields.item[0] === singleItem.id
+      );
+      setEntries(formattedList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const singleItem = useLoaderData();
   const {
     notes,
@@ -83,7 +108,8 @@ const Item = () => {
           </div>
         </div>
       </div>
-      <ItemTracker />
+      <ItemTracker fetchData={fetchData} />
+      <EntryList entries={entries} fetchData={fetchData} />
     </section>
   );
 };

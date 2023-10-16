@@ -6,7 +6,6 @@ var base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 exports.handler = async (event, context, cb) => {
   try {
     const id = event.queryStringParameters.id;
-    console.log(id);
 
     const deletedRecord = await base(process.env.AIRTABLE_ENTRIES).destroy([
       id,

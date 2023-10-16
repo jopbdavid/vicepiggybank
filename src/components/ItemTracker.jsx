@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLoaderData, Form, useNavigation } from "react-router-dom";
+import {
+  useLoaderData,
+  Form,
+  useNavigation,
+  useActionData,
+} from "react-router-dom";
 import axios from "axios";
-import { formatPrice } from "../utils/extras";
+import { getEntries } from "../pages/Item";
 
 export const action = async ({ request }) => {
   console.log(request);
@@ -25,6 +30,7 @@ export const action = async ({ request }) => {
     };
     const response = await axios.post(`/.netlify/functions/addEntry`, newEntry);
     const line = response.data;
+    console.log(line);
 
     return line;
   } catch (error) {
@@ -32,81 +38,69 @@ export const action = async ({ request }) => {
   }
 };
 
-const getEntries = async () => {
-  try {
-    const response = await axios.get(`/.netlify/functions/entries`);
+// const getEntries = async () => {
+//   try {
+//     const response = await axios.get(`/.netlify/functions/entries`);
 
-    const data = response.data.records;
+//     const data = response.data.records;
 
-    return data;
-  } catch (error) {
-    return { error: "Error making request" };
-  }
-};
+//     return data;
+//   } catch (error) {
+//     return { error: "Error making request" };
+//   }
+// };
 
-const deleteEntry = async (id) => {
-  try {
-    console.log(id);
-    const response = await axios.delete(
-      `/.netlify/functions/removeEntry?id=${id}`
-    );
+// const deleteEntry = async (id) => {
+//   try {
+//     console.log(id);
+//     const response = await axios.delete(
+//       `/.netlify/functions/removeEntry?id=${id}`
+//     );
 
-    return response;
-  } catch (error) {
-    return { error: "Error making request" };
-  }
-};
+//     return response;
+//   } catch (error) {
+//     return { error: "Error making request" };
+//   }
+// };
 
-const ItemTracker = () => {
+const ItemTracker = ({ fetchData }) => {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const { id, item } = useLoaderData();
+  const { id } = useLoaderData();
   const formRef = useRef();
-  const [entries, setEntries] = useState([]);
+  // const [entries, setEntries] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
+  const newEntry = useActionData();
+  console.log(newEntry);
 
-  const fetchData = async () => {
-    try {
-      const list = await getEntries();
-      setEntries(list);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const list = await getEntries();
+  //     setEntries(list);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await deleteEntry(id);
-      console.log(response);
-      await fetchData();
-    } catch (error) {
-      console.log(error);
+    if (newEntry && newEntry.length > 0) {
+      setIsSuccess(true);
+      fetchData();
+      formRef.current.reset();
+    } else {
+      fetchData();
     }
-  };
+  }, [newEntry]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-
-    try {
-      const formData = new FormData(e.target); // Access the form data using the event object
-      console.log(formData);
-      const response = await action({ request: formData });
-
-      if (response && !response.error) {
-        setIsSuccess(true);
-        await fetchData();
-        formRef.current.reset();
-      } else {
-        console.error("Error in action:", response.error);
-      }
-    } catch (error) {
-      console.error("Error in action:", error);
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await deleteEntry(id);
+  //     console.log(response);
+  //     await fetchData();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     if (isSuccess) {
@@ -123,76 +117,81 @@ const ItemTracker = () => {
       <div className="border-t-4 border-slate-600 my-16 mx-auto w-1/2 rounded-full"></div>
       <Form
         method="POST"
-        className="flex flex-col gap-y-4"
+        className="flex flex-col gap-y-4 mx-auto w-1/2"
         ref={formRef}
-        on
-        onSubmit={handleSubmit}
       >
         <h4 className="font-medium text-xl capitalize">Add New Entry</h4>
+        <div className="flex flex-row gap-y-2 gap-x-2">
+          <div className="form-control">
+            <input type="hidden" name="id" value={id} />
+          </div>
 
-        <div className="form-control">
-          <input type="hidden" name="id" value={id} />
+          <div className="form-control w-1/3">
+            <label htmlFor="units" className="label">
+              <span className="label-text capitalize">Quantity:</span>
+            </label>
+            <input
+              type="number"
+              name="units"
+              className={`input input-bordered sm`}
+              required
+            />
+          </div>
+
+          <div className="form-control w-2/3">
+            <label htmlFor="date" className="label">
+              <span className="label-text capitalize">Date:</span>
+            </label>
+            <input
+              type="date"
+              name="date"
+              className={`input input-bordered sm`}
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-control">
-          <label htmlFor="units" className="label">
-            <span className="label-text capitalize">Quantity Consumed:</span>
-          </label>
-          <input
-            type="number"
-            name="units"
-            className={`input input-bordered sm`}
-            required
-          />
-        </div>
-
-        <div className="form-control">
-          <label htmlFor="date" className="label">
-            <span className="label-text capitalize">Date of Consumption:</span>
-          </label>
-          <input
-            type="date"
-            name="date"
-            className={`input input-bordered sm`}
-            required
-          />
-        </div>
-        <div className="mt-4">
+        <div className="mt-4 w-1/2 m-auto">
           <button
             type="submit"
-            className="btn btn-primary btn-block"
+            className="btn btn-primary btn-block "
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <span className="loading loading-spinner"></span>
-                sending...
+                Submitting...
               </>
             ) : (
-              "Add Entry" || "submit"
+              "Add Entry" || "Submit"
             )}
           </button>
         </div>
       </Form>
       {isSuccess && (
-        <div className="alert alert-success">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="stroke-current shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>Your entry was added successfully!</span>
+        <div className="fixed inset-0 flex items-center justify-center z-50 mb-42">
+          <div className="alert alert-success w-2/3 m-auto p-8 rounded-lg shadow-lg flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="text-xl capitalize">
+              Your entry was added successfully!
+            </span>
+          </div>
         </div>
       )}
-      <div className="border-t-4 border-slate-600 my-16 mx-auto w-1/2 rounded-full"></div>
+
+      {/* <div className="border-t-4 border-slate-600 my-16 mx-auto w-1/2 rounded-full"></div>
       <div className="px-4 py-12 ">
         <h1 className="text-3xl font-semibold mb-6 text-slate-800">
           {item} Entries
@@ -231,7 +230,7 @@ const ItemTracker = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
