@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { formatPrice } from "../utils/extras";
 import cost from "../assets/cost.svg";
+import icon from "../assets/icon.png";
+import unitCost from "../assets/unitCost.svg";
 import estimate from "../assets/estimate.svg";
 import calendar from "../assets/calendar.svg";
 import ItemTracker from "../components/ItemTracker";
 import axios from "axios";
 import EntryList from "../components/EntryList";
+import Dashboard from "../components/Dashboard";
 
 export const loader = async ({ params }) => {
   const id = params.id;
@@ -71,43 +74,49 @@ const Item = () => {
           </li>
         </ul>
       </div>
-
-      <div className="mt-16 flex gap-x-10 justify-center">
+      <div className="flex justify-left w-2/3 mx-auto border-b-2 border-slate-800 capitalize pb-6">
+        <h1 className="text-4xl font-bold  text-slate-900 ">Item Details:</h1>
+      </div>
+      <div className="mt-8 flex justify-center items-center gap-x-4 mr-10">
         <img
           src={imgUrl}
           alt={item}
-          className="w-64 h-auto object-fit hover:scale-105 rounded-[35%] ml-10"
+          className="w-48 h-auto object-fit hover:scale-105 rounded-[35%] "
         />
-
-        <div className="stats shadow w-3/4 bg-emerald-100 h-56">
-          <div className="stat">
+        <div className="stats grid-cols-2 shadow w-2/4 bg-emerald-100 h-36">
+          <div
+            className="  flex
+          flex-col justify-center items-center"
+          >
             <div className="stat-figure text-secondary">
-              <img src={cost} alt="weeklycost" className="w-16 h-16" />
+              <img src={icon} alt="item" className="w-12 h-12" />
             </div>
-            <div className="stat-title">Cost / Week</div>
-            <div className="stat-value">{formatPrice(costWeek)}</div>
-            <div className="stat-desc">Jan 1st - Feb 1st</div>
+            <div className="stat-title text-lg font-medium">Item</div>
+            <div className="stat-value text-base font-mono">{item}</div>
+            <div className="stat-desc"></div>
           </div>
 
-          <div className="stat">
+          <div
+            className="flex
+          flex-col justify-center items-center"
+          >
             <div className="stat-figure text-secondary">
-              <img src={estimate} alt="weeklycost" className="w-14 h-14" />
+              <img src={unitCost} alt="unitCost" className="w-12 h-12" />
             </div>
-            <div className="stat-title">Cost / Month</div>
-            <div className="stat-value">{formatPrice(costMonth)}</div>
-            <div className="stat-desc">↗︎ 400 (22%)</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <img src={calendar} alt="weeklycost" className="w-16 h-16" />
+            <div className="stat-title text-lg font-medium">Cost / Unit</div>
+            <div className="stat-value text-base font-mono">
+              {formatPrice(priceUnit)}
             </div>
-            <div className="stat-title">Cost / Year</div>
-            <div className="stat-value">{formatPrice(costYear)}</div>
-            <div className="stat-desc">↘︎ 90 (14%)</div>
+            <div className="stat-desc"></div>
           </div>
         </div>
       </div>
+      <Dashboard
+        costWeek={costWeek}
+        costMonth={costMonth}
+        costYear={costYear}
+      />
+
       <ItemTracker fetchData={fetchData} />
       <EntryList entries={entries} fetchData={fetchData} />
     </section>
