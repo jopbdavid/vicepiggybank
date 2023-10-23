@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { formatPrice } from "../utils/extras";
 import { useLoaderData } from "react-router";
 import axios from "axios";
+import Pagination from "./Pagination";
 
 const deleteEntry = async (id) => {
   try {
@@ -82,6 +83,7 @@ const EntryList = ({ entries, fetchData }) => {
                 })}
               </tbody>
             </table>
+            <Pagination />
           </div>
         )}
       </div>

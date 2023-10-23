@@ -18,12 +18,11 @@ exports.handler = async (event, context, cb) => {
     }
     let { projectedWeeklyUnits } = JSON.parse(event.body);
     projectedWeeklyUnits = parseInt(projectedWeeklyUnits);
-    console.log(projectedWeeklyUnits);
 
     let updatedItem = await airtable.update(id, {
       qntWeek: projectedWeeklyUnits,
     });
-    console.log(updatedItem);
+
     updatedItem = {
       id: updatedItem.id,
       qntWeek: updatedItem.fields.qntWeek,
@@ -31,8 +30,6 @@ exports.handler = async (event, context, cb) => {
       costMonth: updatedItem.fields.costMonth.toFixed(2),
       costYear: updatedItem.fields.costYear.toFixed(2),
     };
-
-    console.log(updatedItem);
 
     if (updatedItem.error) {
       return {
@@ -44,10 +41,7 @@ exports.handler = async (event, context, cb) => {
     }
 
     return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      statusCode: 202,
       body: JSON.stringify(updatedItem),
     };
   } catch (error) {

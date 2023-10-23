@@ -16,9 +16,9 @@ export const editItem = async (itemId, projectedWeeklyUnits) => {
       units
     );
 
-    const newQntWeek = response.data.fields.qntWeek;
+    const data = response.data;
 
-    return newQntWeek;
+    return data;
   } catch (error) {
     return { error: "Error making request" };
   }
@@ -28,11 +28,11 @@ const Dashboard = () => {
   const [projectedWeeklyUnits, setProjectedWeeklyUnits] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const { id } = useLoaderData();
+  const { id, qntWeek, costWeek, costMonth, costYear } = useLoaderData();
 
-  const [week, setWeek] = useState(0);
-  const [month, setMonth] = useState(0);
-  const [year, setYear] = useState(0);
+  const [week, setWeek] = useState(costWeek);
+  const [month, setMonth] = useState(costMonth);
+  const [year, setYear] = useState(costYear);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -44,7 +44,6 @@ const Dashboard = () => {
   const yearCostPercentage = year / 800;
 
   useEffect(() => {
-    console.log("isSuccess changed to", isSuccess);
     if (isSuccess) {
       const timeout = setTimeout(() => {
         setIsSuccess(false);
@@ -56,24 +55,6 @@ const Dashboard = () => {
     }
   }, [isSuccess]);
 
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-
-  //     try {
-  //       const updatedItem = await editItem(id, projectedWeeklyUnits);
-  //       if (updatedItem) {
-  //         console.log(updatedItem);
-  //         setIsSuccess(true);
-  //         setProjectedWeeklyUnits("");
-  //         setWeek(updatedItem.costWeek);
-  //         setMonth(updatedItem.costMonth);
-  //         setYear(updatedItem.costYear);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
   const handleChange = (e) => {
     setProjectedWeeklyUnits(e.target.value);
   };
@@ -81,8 +62,15 @@ const Dashboard = () => {
   const handleClick = async () => {
     try {
       console.log(id, projectedWeeklyUnits);
-      const test = await editItem(id, projectedWeeklyUnits);
-      console.log(test);
+      const updatedItem = await editItem(id, projectedWeeklyUnits);
+
+      if (updatedItem) {
+        setIsSuccess(true);
+        setProjectedWeeklyUnits("");
+        setWeek(updatedItem.costWeek);
+        setMonth(updatedItem.costMonth);
+        setYear(updatedItem.costYear);
+      }
     } catch (error) {
       console.log(error);
     }
