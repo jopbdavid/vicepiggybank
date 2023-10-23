@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { formatPrice } from "../utils/extras";
-import cost from "../assets/cost.svg";
 import icon from "../assets/icon.png";
 import unitCost from "../assets/unitCost.svg";
-import estimate from "../assets/estimate.svg";
-import calendar from "../assets/calendar.svg";
 import ItemTracker from "../components/ItemTracker";
 import axios from "axios";
 import EntryList from "../components/EntryList";
@@ -49,6 +46,7 @@ const Item = () => {
 
   const singleItem = useLoaderData();
   const {
+    id,
     notes,
     brand,
     priceUnit,
@@ -111,11 +109,7 @@ const Item = () => {
           </div>
         </div>
       </div>
-      <Dashboard
-        costWeek={costWeek}
-        costMonth={costMonth}
-        costYear={costYear}
-      />
+      <Dashboard />
 
       <ItemTracker fetchData={fetchData} />
       <EntryList entries={entries} fetchData={fetchData} />

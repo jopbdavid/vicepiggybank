@@ -71,7 +71,7 @@ const ItemTracker = ({ fetchData }) => {
   // const [entries, setEntries] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const newEntry = useActionData();
-  console.log(newEntry);
+  // console.log(newEntry);
 
   // const fetchData = async () => {
   //   try {
