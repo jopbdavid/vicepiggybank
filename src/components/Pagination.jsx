@@ -2,13 +2,6 @@ import React from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 const Pagination = () => {
-  const pagination = {
-    page: 1,
-    pageCount: 3,
-    pageSize: 10,
-    total: 22,
-  };
-
   const page = 1;
   const pageCount = 3;
   const pageSize = 10;

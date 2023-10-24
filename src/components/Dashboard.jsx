@@ -25,23 +25,25 @@ export const editItem = async (itemId, projectedWeeklyUnits) => {
 };
 
 const Dashboard = () => {
+  const { id, qntWeek, costWeek, costMonth, costYear, sumItems, sumCost } =
+    useLoaderData();
+
   const [projectedWeeklyUnits, setProjectedWeeklyUnits] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const { id, qntWeek, costWeek, costMonth, costYear } = useLoaderData();
 
   const [week, setWeek] = useState(costWeek);
   const [month, setMonth] = useState(costMonth);
   const [year, setYear] = useState(costYear);
+  const [units, setUnits] = useState(qntWeek);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const weekCostResult = week - 30;
-  const monthCostResult = month - 150;
-  const yearCostResult = year - 800;
-  const weekCostPercentage = (30 / week - 1) * 100;
-  const monthCostPercentage = month / 150;
-  const yearCostPercentage = year / 800;
+  const weekUnitsResult = units * 4.5 * 12 - sumItems;
+  const weekUnitsPercentage = (sumItems / (units * 4.5 * 12)) * 100;
+
+  const yearCostResult = year - sumCost;
+
+  const yearCostPercentage = (sumCost / year) * 100;
 
   useEffect(() => {
     if (isSuccess) {
@@ -70,6 +72,7 @@ const Dashboard = () => {
         setWeek(updatedItem.costWeek);
         setMonth(updatedItem.costMonth);
         setYear(updatedItem.costYear);
+        setUnits(updatedItem.qntWeek);
       }
     } catch (error) {
       console.log(error);
@@ -138,121 +141,107 @@ const Dashboard = () => {
       <div className=" flex justify-left w-2/3 mx-auto mt-20">
         <div className="tabs tabs-boxed w-full">
           <a className="tab tab-active w-1/2">
-            <h1 className=" font-mono  text-slate-200 text-2xl">
+            <h1 className=" font-mono  text-slate-200 text-xl">
               Projected Cost:
             </h1>
           </a>
         </div>
       </div>
       <div className=" flex gap-x-10 justify-center">
-        <div className="stats shadow w-3/4 bg-emerald-100 h-36">
+        <div className="stats shadow w-3/4 bg-emerald-100 h-38">
           <div className="stat">
             <div className="stat-figure text-secondary">
-              <img src={weekIcon} alt="weeklycost" className="w-14 h-14" />
+              <img src={weekIcon} alt="weeklycost" className="w-10 h-10" />
             </div>
             <div className="stat-title">Cost / Week</div>
             <div className="stat-value">{formatPrice(week)}</div>
+            <div className="stat-desc">
+              <div className="stat-title">Units / Week</div>
+              <div className="stat-value">{units}</div>
+            </div>
           </div>
 
           <div className="stat">
             <div className="stat-figure text-secondary">
-              <img src={monthIcon} alt="monthlycost" className="w-14 h-14" />
+              <img src={monthIcon} alt="monthlycost" className="w-10 h-10" />
             </div>
             <div className="stat-title">Cost / Month</div>
             <div className="stat-value">{formatPrice(month)}</div>
+            <div className="stat-desc">
+              <div className="stat-title">Units / Month</div>
+              <div className="stat-value">{units * 4.5}</div>
+            </div>
           </div>
 
           <div className="stat">
             <div className="stat-figure text-secondary">
-              <img src={yearIcon} alt="yearlycost" className="w-14 h-14" />
+              <img src={yearIcon} alt="yearlycost" className="w-10 h-10" />
             </div>
             <div className="stat-title">Cost / Year</div>
             <div className="stat-value">{formatPrice(year)}</div>
+            <div className="stat-desc">
+              <div className="stat-title">Units / Year</div>
+              <div className="stat-value">{units * 4.5 * 12}</div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* RESULTS */}
+
       <div className=" flex justify-left w-2/3 mx-auto mt-10">
         <div className="tabs tabs-boxed w-full">
           <a className="tab tab-active w-1/2">
-            <h1 className=" font-mono  text-slate-200 text-2xl">
-              Real Cost (year to date):
+            <h1 className=" font-mono  text-slate-200 text-xl">
+              Results (year to date):
             </h1>
-          </a>
-        </div>
-      </div>
-
-      <div className="flex gap-x-10 justify-center">
-        <div className="stats shadow w-3/4 bg-emerald-100 h-36">
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <img src={weekIcon} alt="weeklycost" className="w-14 h-14" />
-            </div>
-            <div className="stat-title">Cost / Week</div>
-            <div className="stat-value">{formatPrice(week)}</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <img src={monthIcon} alt="monthlycost" className="w-14 h-14" />
-            </div>
-            <div className="stat-title">Cost / Month</div>
-            <div className="stat-value">{formatPrice(month)}</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <img src={yearIcon} alt="yearlycost" className="w-14 h-14" />
-            </div>
-            <div className="stat-title">Cost / Year</div>
-            <div className="stat-value">{formatPrice(year)}</div>
-          </div>
-        </div>
-      </div>
-      <div className=" flex justify-left w-2/3 mx-auto mt-10">
-        <div className="tabs tabs-boxed w-full">
-          <a className="tab tab-active w-1/2">
-            <h1 className=" font-mono  text-slate-200 text-2xl">Results:</h1>
           </a>
         </div>
       </div>
       <div className="flex gap-x-10 justify-center">
         <div className="stats shadow w-3/4 bg-emerald-100 h-28">
           <div className="stat">
+            <div className="stat-title">Total Units:</div>
             <div
               className={`stat-value ${
-                weekCostResult <= 0 ? "text-red-500" : "text-green-500"
+                weekUnitsResult <= 0 ? "text-red-500" : "text-green-500"
               }`}
             >
-              {formatPrice(weekCostResult)}
+              {sumItems}
             </div>
             <div className="stat-desc">
-              ↘︎ 90 ({weekCostPercentage.toFixed(2)}%)
+              🎯 {sumItems} / {units * 4.5 * 12} (
+              {weekUnitsPercentage.toFixed(2)}
+              %)
             </div>
           </div>
 
           <div className="stat">
-            <div
-              className={`stat-value ${
-                monthCostResult <= 0 ? "text-red-500" : "text-green-500"
-              }`}
-            >
-              {formatPrice(monthCostResult)}
-            </div>
-            <div className="stat-desc">↘︎ 90 ({monthCostPercentage}%)</div>
-          </div>
-
-          <div className="stat">
+            <div className="stat-title">Total Cost:</div>
             <div
               className={`stat-value ${
                 yearCostResult <= 0 ? "text-red-500" : "text-green-500"
               }`}
             >
-              {formatPrice(yearCostResult)}
+              {formatPrice(sumCost)}
             </div>
-            <div className="stat-desc">↘︎ 90 ({yearCostPercentage}%)</div>
+            <div className="stat-desc">
+              {" "}
+              🎯 {formatPrice(sumCost)} / {formatPrice(year)} (
+              {yearCostPercentage.toFixed(2)}
+              %)
+            </div>
           </div>
         </div>
       </div>
+      <iframe
+        className="airtable-embed bg-transparent w-3/4 mx-auto rounded-xl"
+        src="https://airtable.com/embed/appNiSW6Wp0N1Zjoi/shr3OxbYa7ebdnglq?backgroundColor=gray"
+        frameborder="0"
+        onmousewheel=""
+        width="100%"
+        height="533"
+      ></iframe>
     </>
   );
 };
