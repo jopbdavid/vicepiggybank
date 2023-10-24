@@ -32,10 +32,8 @@ const EntryList = ({ entries, fetchData }) => {
   };
   return (
     <>
-      <div className="border-t-4 border-slate-600 my-16 mx-auto w-1/2 rounded-full"></div>
-
       <div className="px-4 py-12">
-        <div className="collapse-title">
+        <div className="collapse-title text-center">
           <h1 className="text-3xl font-semibold mb-6 text-slate-800">
             {item} Entries
           </h1>

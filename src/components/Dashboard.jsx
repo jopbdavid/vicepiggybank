@@ -81,39 +81,45 @@ const Dashboard = () => {
 
   return (
     <>
-      <h4 className="font-medium text-xl capitalize">Projected Consumption:</h4>
-      <div className="flex flex-row gap-y-2 gap-x-2">
-        <div className="form-control w-1/3">
-          <label htmlFor="units" className="label">
-            <span className="label-text capitalize">Units / week:</span>
-          </label>
-          <input
-            type="number"
-            name="units"
-            defaultValue=""
-            value={projectedWeeklyUnits}
-            className={`input input-bordered sm`}
-            onChange={handleChange}
-            required
-          />
+      <div className="shadow  bg-slate-50 h-38 m-auto rounded-lg pb-2 w-full">
+        <h4 className="font-medium text-l capitalize text-center mt-10">
+          Insert Number of Units:
+        </h4>
+        <div className="flex flex-row justify-between items-center mx-auto ">
+          <div className="form-control mx-auto w-1/4 mt-2">
+            {/* <label htmlFor="units" className="label">
+              <span className="label-text capitalize">
+                Insert numbers of units to be consumed per week:
+              </span>
+            </label> */}
+            <input
+              type="number"
+              name="units"
+              defaultValue=""
+              value={projectedWeeklyUnits}
+              className={`input input-bordered sm`}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
-      </div>
-      <div className="mt-4 w-1/2 m-auto">
-        <button
-          type="button"
-          className="btn btn-primary btn-block "
-          disabled={isSubmitting}
-          onClick={handleClick}
-        >
-          {isSubmitting ? (
-            <>
-              <span className="loading loading-spinner"></span>
-              Submitting...
-            </>
-          ) : (
-            "Update"
-          )}
-        </button>
+        <div className=" w-1/4 m-auto">
+          <button
+            type="button"
+            className="btn btn-primary btn-block "
+            disabled={isSubmitting}
+            onClick={handleClick}
+          >
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                Submitting...
+              </>
+            ) : (
+              "Update"
+            )}
+          </button>
+        </div>
       </div>
 
       {isSuccess && (
@@ -133,7 +139,7 @@ const Dashboard = () => {
               />
             </svg>
             <span className="text-xl capitalize">
-              Your entry was added successfully!
+              Number of units updated successfully!
             </span>
           </div>
         </div>
