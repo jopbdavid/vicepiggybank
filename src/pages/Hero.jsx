@@ -11,7 +11,7 @@ import piggygif from "../assets/piggygif.gif";
 const Hero = () => {
   return (
     <section>
-      <Parallax pages={3.5} className="bg-emerald-200 ">
+      <Parallax pages={3.5} className="bg-emerald-200">
         {/* Sticky section  */}
         <ParallaxLayer
           sticky={{ start: 0, end: 0.2 }}
@@ -22,29 +22,19 @@ const Hero = () => {
             backgroundPosition: "top",
             backgroundColor: "rgb(167 243 208)",
           }}
-        ></ParallaxLayer>
-
-        {/* First section  */}
-        <ParallaxLayer offset={0.5} speed={1} factor={4}>
+        >
           <HeroSectionOne />
         </ParallaxLayer>
+
+        {/* First section  */}
+        <ParallaxLayer offset={0.5} speed={1} factor={4}></ParallaxLayer>
         {/* Second section */}
 
-        <ParallaxLayer sticky={{ start: 0.5, end: 2.3 }}>
+        <ParallaxLayer sticky={{ start: 0.5, end: 2.3 }} style={{ zIndex: 2 }}>
           <ParallaxImage image={piggygif} />
-          {/*      <div className="img-container" ref={imgContainerRef}>
-            <img
-              src={piggygif}
-              alt="piggybankgif"
-              className="w-60 h-60 mx-auto"
-              style={{ transform: "none" }}
-            />
-          </div> */}
         </ParallaxLayer>
         {/* Third section */}
-        <ParallaxLayer offset={0.2} speed={0.05}>
-          <HeroSectionTwo />
-        </ParallaxLayer>
+        <ParallaxLayer offset={0} speed={0.05}></ParallaxLayer>
         <ParallaxLayer
           offset={2.5}
           style={{
@@ -52,12 +42,12 @@ const Hero = () => {
             backgroundSize: "40%",
             backgroundPosition: "top",
             backgroundColor: "rgb(167 243 208)",
-            marginTop: "6rem",
           }}
+          className="mt-16 bg-emerald-600"
         ></ParallaxLayer>
         {/* Fourth section */}
         <ParallaxLayer offset={1.5} speed={1}>
-          <HeroSectionThree />
+          <HeroSectionTwo />
         </ParallaxLayer>
       </Parallax>
     </section>

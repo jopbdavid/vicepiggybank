@@ -25,8 +25,17 @@ export const editItem = async (itemId, projectedWeeklyUnits) => {
 };
 
 const Dashboard = () => {
-  const { id, qntWeek, costWeek, costMonth, costYear, sumItems, sumCost } =
-    useLoaderData();
+  const {
+    id,
+    item,
+    qntWeek,
+    costWeek,
+    costMonth,
+    costYear,
+    sumItems,
+    sumCost,
+  } = useLoaderData();
+  console.log(item);
 
   const [projectedWeeklyUnits, setProjectedWeeklyUnits] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -242,7 +251,8 @@ const Dashboard = () => {
       </div>
       <iframe
         className="airtable-embed bg-transparent w-3/4 mx-auto rounded-xl"
-        src="https://airtable.com/embed/appNiSW6Wp0N1Zjoi/shr3OxbYa7ebdnglq?backgroundColor=gray"
+        src={`https://airtable.com/embed/appNiSW6Wp0N1Zjoi/shr1H3ROr9O2C8qmQ?backgroundColor=gray&viewControls=on
+        `}
         frameborder="0"
         onmousewheel=""
         width="100%"
