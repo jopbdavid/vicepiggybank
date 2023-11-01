@@ -11,6 +11,7 @@ const airtable = new Airtable({
 exports.handler = async (event, context, cb) => {
   try {
     const response = await airtable.list({ maxRecords: 200 });
+    console.log(JSON.stringify(response, null, 2));
 
     const items = response.records.map((i) => {
       const { id, fields } = i;
